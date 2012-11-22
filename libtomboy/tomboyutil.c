@@ -72,7 +72,7 @@ tomboy_window_move_to_current_workspace (GtkWindow *window)
 {
 	GdkWindow *gdkwin = gtk_widget_get_window (GTK_WIDGET (window));
 	GdkWindow *rootwin = 
-		gdk_screen_get_root_window (gdk_drawable_get_screen (gdkwin));
+		gdk_screen_get_root_window (gdk_window_get_screen (gdkwin));
 
 	GdkAtom current_desktop = 
 		gdk_atom_intern ("_NET_CURRENT_DESKTOP", FALSE);
@@ -103,10 +103,10 @@ tomboy_window_move_to_current_workspace (GtkWindow *window)
 	xev.xclient.serial = 0;
 	xev.xclient.send_event = True;
 	xev.xclient.display = GDK_WINDOW_XDISPLAY (gdkwin);
-	xev.xclient.window = GDK_WINDOW_XWINDOW (gdkwin);
+	xev.xclient.window = GDK_WINDOW_XID (gdkwin);
 	xev.xclient.message_type = 
 		gdk_x11_atom_to_xatom_for_display(
-			gdk_drawable_get_display (gdkwin),
+			gdk_window_get_display (gdkwin),
 			wm_desktop);
 	xev.xclient.format = 32;
 	xev.xclient.data.l[0] = workspace;
@@ -114,7 +114,7 @@ tomboy_window_move_to_current_workspace (GtkWindow *window)
 	xev.xclient.data.l[2] = 0;
 
 	XSendEvent (GDK_WINDOW_XDISPLAY (rootwin),
-		    GDK_WINDOW_XWINDOW (rootwin),
+		    GDK_WINDOW_XID (rootwin),
 		    False,
 		    SubstructureRedirectMask | SubstructureNotifyMask,
 		    &xev);

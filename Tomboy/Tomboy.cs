@@ -428,13 +428,6 @@ namespace Tomboy
 				                   "Copyright \xa9 2004-2011 Others\n");
 			about.Comments = Catalog.GetString ("A simple and easy to use desktop " +
 			                                    "note-taking application.");
-			Gtk.AboutDialog.SetUrlHook (delegate (Gtk.AboutDialog dialog, string link) {
-				try {
-					Services.NativeApplication.OpenUrl (link, null);
-				} catch (Exception e) {
-					GuiUtils.ShowOpeningLocationError (dialog, link, e.Message);
-				}
-			}); 
 			about.Website = Defines.TOMBOY_WEBSITE;
 			about.WebsiteLabel = Catalog.GetString("Homepage");
 			about.Authors = authors;

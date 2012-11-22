@@ -332,7 +332,7 @@ namespace Tomboy
 
 			if (args.Tag.Name == "gtkspell-misspelled") {
 				// Remove misspelled tag for links & title
-				foreach (Gtk.TextTag tag in args.StartChar.Tags) {
+				foreach (Gtk.TextTag tag in args.Start.Tags) {
 					if (tag != args.Tag &&
 					                !NoteTagTable.TagIsSpellCheckable (tag)) {
 						remove = true;
@@ -340,8 +340,8 @@ namespace Tomboy
 					}
 				}
 				// Remove misspelled tag for acronyms (in all caps)
-				if (!args.StartChar.EndsWord() && System.Char.IsUpper(args.StartChar.Char, 0)) {
-					Gtk.TextIter char_iter = args.StartChar;
+				if (!args.Start.EndsWord() && System.Char.IsUpper(args.Start.Char, 0)) {
+					Gtk.TextIter char_iter = args.Start;
 					remove = true;
 					while (!char_iter.EndsWord()) {
 						if (Char.IsLower(char_iter.Char, 0)) {
@@ -359,8 +359,8 @@ namespace Tomboy
 
 			if (remove) {
 				Buffer.RemoveTag ("gtkspell-misspelled",
-				                  args.StartChar,
-				                  args.EndChar);
+				                  args.Start,
+				                  args.End);
 			}
 		}
 	}
@@ -563,7 +563,7 @@ namespace Tomboy
 		void OnInsertText (object sender, Gtk.InsertTextArgs args)
 		{
 			Gtk.TextIter start = args.Pos;
-			start.BackwardChars (args.Length);
+			start.BackwardChars (args.NewTextLength);
 
 			ApplyUrlToBlock (start, args.Pos);
 		}
@@ -832,7 +832,7 @@ namespace Tomboy
 		void OnInsertText (object sender, Gtk.InsertTextArgs args)
 		{
 			Gtk.TextIter start = args.Pos;
-			start.BackwardChars (args.Length);
+			start.BackwardChars (args.NewTextLength);
 
 			Gtk.TextIter end = args.Pos;
 
@@ -972,7 +972,7 @@ namespace Tomboy
 		void OnInsertText (object sender, Gtk.InsertTextArgs args)
 		{
 			Gtk.TextIter start = args.Pos;
-			start.BackwardChars (args.Length);
+			start.BackwardChars (args.NewTextLength);
 
 			ApplyWikiwordToBlock (start, args.Pos);
 			

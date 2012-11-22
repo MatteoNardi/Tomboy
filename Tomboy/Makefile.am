@@ -1,11 +1,10 @@
 include $(top_srcdir)/Makefile.include
 
-SUBDIRS = . Addins
+SUBDIRS = .
 
 TARGET_NAME = Tomboy.exe
 TARGET = $(top_builddir)/bin/$(TARGET_NAME)
 WRAPPER = tomboy
-PANEL_WRAPPER = tomboy-panel
 
 DBUS_CSFILES = 				\
 	$(srcdir)/IRemoteControl.cs	\
@@ -15,8 +14,7 @@ DBUS_CSFILES = 				\
 OSX_CSFILES =					\
 	$(srcdir)/MacApplication.cs		\
 	$(srcdir)/MacFactory.cs			\
-	$(srcdir)/WindowsApplication.cs		\
-	$(srcdir)/XmlPreferencesClient.cs
+	$(srcdir)/WindowsApplication.cs	
 
 if ENABLE_OSX
 OSX_CSFLAGS = -define:MAC
@@ -31,8 +29,7 @@ WIN_CSFILES =					\
 	$(srcdir)/ManagedWinapi.Hotkey.cs	\
 	$(srcdir)/WindowsApplication.cs		\
 	$(srcdir)/WindowsFactory.cs		\
-	$(srcdir)/WindowsKeybinder.cs		\
-	$(srcdir)/XmlPreferencesClient.cs
+	$(srcdir)/WindowsKeybinder.cs
 
 if ENABLE_WIN
 WIN_CSFLAGS = -define:WIN32
@@ -41,25 +38,12 @@ WIN_LIBS =					\
 	-r:System.Windows.Forms.dll
 endif
 
-PANELAPPLET_CSFILES =					\
-	$(srcdir)/Applet.cs
-
 GNOME_CSFILES =								\
-	$(srcdir)/GConf.PropertyEditors/PropertyEditor.cs		\
-	$(srcdir)/GConf.PropertyEditors/PropertyEditorBool.cs		\
-	$(srcdir)/GConf.PropertyEditors/PropertyEditorEntry.cs		\
-	$(srcdir)/GConf.PropertyEditors/PropertyEditorToggleButton.cs	\
-	$(srcdir)/GConfPreferencesClient.cs				\
 	$(srcdir)/GnomeApplication.cs					\
 	$(srcdir)/GnomeFactory.cs					\
 	$(srcdir)/GnomeSession.cs					\
 	$(srcdir)/XKeybinder.cs						\
 	$(srcdir)/gtk-sharp-beans/*.cs
-
-if ENABLE_PANEL_APPLET
-PANEL_APPLET_CSFLAGS = -define:PANEL_APPLET
-PANELAPPLET_USED_CSFILES = $(PANELAPPLET_CSFILES)
-endif
 
 if ENABLE_GNOME
 DBUS_CSFLAGS = -define:ENABLE_DBUS
@@ -71,10 +55,6 @@ if FIXED_GTKSPELL
 FIXED_GTKSPELL_CSFLAGS = -define:FIXED_GTKSPELL
 endif
 
-if HAS_GTK_2_16
-HAS_GTK_2_16_FLAGS = -define:HAS_GTK_2_16
-endif
-
 CSFLAGS = 				\
 	-debug				\
 	-define:DEBUG 			\
@@ -84,9 +64,7 @@ CSFLAGS = 				\
 	$(DBUS_CSFLAGS) 		\
 	$(OSX_CSFLAGS) 		\
 	$(WIN_CSFLAGS) 		\
-	$(PANEL_APPLET_CSFLAGS)		\
 	$(FIXED_GTKSPELL_CSFLAGS) \
-	$(HAS_GTK_2_16_FLAGS) \
 	$(CSC_DEFINES)
 
 CSFILES = 					\
@@ -122,13 +100,14 @@ CSFILES = 					\
 	$(srcdir)/Tag.cs			\
 	$(srcdir)/TagButton.cs			\
 	$(srcdir)/TagManager.cs			\
-	$(srcdir)/Tray.cs 			\
+	$(srcdir)/Tray.cs                       \
 	$(srcdir)/Trie.cs			\
 	$(srcdir)/Undo.cs 			\
 	$(srcdir)/Utils.cs			\
 	$(srcdir)/Watchers.cs			\
 	$(srcdir)/Notebooks/*.cs		\
 	$(srcdir)/Synchronization/*.cs		\
+	$(srcdir)/XmlPreferencesClient.cs	\
 	\
 	$(srcdir)/Hyena/*.cs			\
 	\
@@ -137,8 +116,6 @@ CSFILES = 					\
 	$(GNOME_USED_CSFILES)			\
 	$(WIN_USED_CSFILES)			\
 	$(OSX_USED_CSFILES)			\
-	\
-	$(PANELAPPLET_USED_CSFILES)			\
 	\
 	$(srcdir)/Gnome.Keyring/*.cs		\
 	\
@@ -181,9 +158,6 @@ tomboylib_DATA = $(TARGET) $(TARGET).config $(TARGET).mdb
 
 
 bin_SCRIPTS = $(WRAPPER)
-if ENABLE_PANEL_APPLET
-bin_SCRIPTS += $(PANEL_WRAPPER)
-endif
 
 $(WRAPPER): $(srcdir)/$(WRAPPER).in Makefile
 	mkdir -p `dirname $(WRAPPER)` && 		\
@@ -196,17 +170,6 @@ $(WRAPPER): $(srcdir)/$(WRAPPER).in Makefile
 	    -e "s|\@srcdir\@|$(PWD)|g"	\
 	    < $< > $@
 	chmod +x $(WRAPPER)
-
-$(PANEL_WRAPPER): $(srcdir)/$(PANEL_WRAPPER).in Makefile
-	sed -e "s|\@prefix\@|$(prefix)|g" 		\
-	    -e "s|\@pkglibdir\@|$(pkglibdir)|g" 	\
-	    -e "s|\@bindir\@|$(bindir)|g"		\
-	    -e "s|\@target\@|$(TARGET_NAME)|g" 		\
-	    -e "s|\@wrapper\@|$(WRAPPER)|g"		\
-	    -e "s|\@extragac\@|$(EXTRA_GAC_PREFIX)|g"	\
-	    -e "s|\@srcdir\@|$(PWD)|g"	\
-	    < $< > $@
-	chmod +x $(PANEL_WRAPPER)
 
 $(TARGET).config: $(srcdir)/$(TARGET_NAME$).config.in Makefile
 	sed -e "s|\@pkglibdir\@|$(pkglibdir)|" \
@@ -224,9 +187,7 @@ EXTRA_DIST =            		\
 	$(OSX_CSFILES)		\
 	$(WIN_CSFILES)		\
 	$(DBUS_CSFILES)		\
-	$(PANELAPPLET_CSFILES)		\
 	$(WRAPPER).in			\
-	$(PANEL_WRAPPER).in		\
 	$(TARGET_NAME).config.in		\
 	$(srcdir)/Defines.cs.in		\
 	$(srcdir)/Tomboy.addin.xml
@@ -236,6 +197,5 @@ CLEANFILES =			\
 	$(TARGET).config	\
 	$(TARGET).mdb 		\
 	$(WRAPPER)		\
-	$(PANEL_WRAPPER)	\
 	Defines.cs
 

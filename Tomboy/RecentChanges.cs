@@ -19,7 +19,7 @@ namespace Tomboy
 		NoteManager manager;
 
 		Gtk.MenuBar menu_bar;
-		Gtk.ComboBoxEntry find_combo;
+		Gtk.ComboBoxText find_combo;
 		Gtk.Button clear_search_button;
 		Gtk.Statusbar status_bar;
 		Gtk.ScrolledWindow matches_window;
@@ -100,7 +100,7 @@ namespace Tomboy
 			Gtk.Label label = new Gtk.Label (Catalog.GetString ("_Search:"));
 			label.Xalign = 0.0f;
 
-			find_combo = Gtk.ComboBoxEntry.NewText ();
+			find_combo = Gtk.ComboBoxText.NewWithEntry ();
 			label.MnemonicWidget = find_combo;
 			find_combo.Changed += OnEntryChanged;
 			find_combo.Entry.ActivatesDefault = false;
@@ -146,7 +146,9 @@ namespace Tomboy
 			tree.Show ();
 
 			status_bar = new Gtk.Statusbar ();
-			status_bar.HasResizeGrip = true;
+
+			// TODO: fix BUG 585479
+			//status_bar.HasResizeGrip = true;
 			status_bar.Show ();
 
 			// Update on changes to notes
@@ -604,7 +606,7 @@ namespace Tomboy
 				"in the selected notebook.\nClick here to " +
 				"search across all notes.");
 			Gtk.LinkButton link_button = new Gtk.LinkButton ("", message);
-			Gtk.LinkButton.SetUriHook(ShowAllSearchResults);
+			link_button.ActivateLink += new ActivateLinkHandler (ShowAllSearchResults);
 			link_button.TooltipText = Catalog.GetString 
 				("Click here to search across all notebooks");
 			link_button.Show();
@@ -633,7 +635,7 @@ namespace Tomboy
 			}	
 		}
 		
-		private void ShowAllSearchResults (Gtk.LinkButton button, String param)
+		private void ShowAllSearchResults (object o, ActivateLinkArgs args)
 		{
 			TreeIter iter;
 			notebooksTree.Model.GetIterFirst (out iter);
@@ -865,7 +867,7 @@ namespace Tomboy
 				if (tree.Selection.PathIsSelected (path) && (args.Event.State &
 						(Gdk.ModifierType.ControlMask | Gdk.ModifierType.ShiftMask)) == 0) {
 					if (column != null && args.Event.Button == 1) {
-						Gtk.CellRenderer renderer = column.CellRenderers [0];
+						Gtk.CellRenderer renderer = column.Cells [0];
 						Gdk.Rectangle background_area = tree.GetBackgroundArea (path, column);
 						Gdk.Rectangle cell_area = tree.GetCellArea (path, column);
 

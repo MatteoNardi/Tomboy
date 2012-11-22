@@ -156,7 +156,7 @@ namespace Tomboy
 			Pixbuf = GuiUtils.GetIcon ("tomboy-panel", panel_size) ??
 				GuiUtils.GetIcon ("tomboy", panel_size);
 
-			Tooltip = TomboyTrayUtils.GetToolTipText ();
+			TooltipText = TomboyTrayUtils.GetToolTipText ();
 
 			Visible = (bool) Preferences.Get (Preferences.ENABLE_TRAY_ICON);
 			Preferences.SettingChanged += (o, args) => {

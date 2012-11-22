@@ -319,9 +319,7 @@ namespace Tomboy.Notebooks
 			// Prompt the user for the name of a new notebook
 			Notebooks.CreateNotebookDialog dialog =
 				new Notebooks.CreateNotebookDialog (parent,
-							Gtk.DialogFlags.Modal
-								| Gtk.DialogFlags.DestroyWithParent
-								| Gtk.DialogFlags.NoSeparator);
+							Gtk.DialogFlags.Modal | Gtk.DialogFlags.DestroyWithParent);
 			
 			
 			int response = dialog.Run ();

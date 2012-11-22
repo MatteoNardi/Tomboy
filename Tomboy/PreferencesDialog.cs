@@ -27,8 +27,6 @@ namespace Tomboy
 		Gtk.Label font_face;
 		Gtk.Label font_size;
 
-		Mono.Addins.Gui.AddinTreeWidget addin_tree;
-
 		Gtk.Button enable_addin_button;
 		Gtk.Button disable_addin_button;
 		Gtk.Button addin_prefs_button;
@@ -222,7 +220,7 @@ namespace Tomboy
 			// Custom font...
 			Gtk.HBox font_box = new Gtk.HBox (false, 0);
 			check = MakeCheckButton (Catalog.GetString ("Use custom _font"));
-			font_box.PackStart (check);
+			font_box.PackStart (check, true, true, 0);
 
 			font_peditor =
 			        Services.Factory.CreatePropertyEditorToggleButton (Preferences.ENABLE_CUSTOM_FONT,
@@ -231,7 +229,7 @@ namespace Tomboy
 
 			font_button = MakeFontButton ();
 			font_button.Sensitive = check.Active;
-			font_box.PackStart (font_button);
+			font_box.PackStart (font_button, true, true, 0);
 			font_box.ShowAll ();
 			options_list.PackStart (font_box, false, false, 0);
 
@@ -240,7 +238,7 @@ namespace Tomboy
 			// Note renaming bahvior
 			Gtk.HBox rename_behavior_box = new Gtk.HBox (false, 0);
 			label = MakeLabel (Catalog.GetString ("When renaming a linked note: "));
-			rename_behavior_box.PackStart (label);
+			rename_behavior_box.PackStart (label, true, true, 0);
 			rename_behavior_combo = new Gtk.ComboBox (new string [] {
 				Catalog.GetString ("Ask me what to do"),
 				Catalog.GetString ("Never rename links"),
@@ -254,7 +252,7 @@ namespace Tomboy
 			rename_behavior_combo.Changed += (o, e) =>
 				Preferences.Set (Preferences.NOTE_RENAME_BEHAVIOR,
 				                 rename_behavior_combo.Active);
-			rename_behavior_box.PackStart (rename_behavior_combo);
+			rename_behavior_box.PackStart (rename_behavior_combo, true, true, 0);
 			rename_behavior_box.ShowAll ();
 			options_list.PackStart (rename_behavior_box, false, false, 0);
 			
@@ -534,9 +532,9 @@ namespace Tomboy
 			};
 			autosyncSpinner.ValueChanged += updateTimeoutPref;
 
-			autosyncBox.PackStart (autosyncCheck);
-			autosyncBox.PackStart (autosyncSpinner);
-			autosyncBox.PackStart (autosyncExtraText);
+			autosyncBox.PackStart (autosyncCheck, true, true, 0);
+			autosyncBox.PackStart (autosyncSpinner, true, true, 0);
+			autosyncBox.PackStart (autosyncExtraText, true, true, 0);
 			vbox.PackStart (autosyncBox, false, true, 0);
 
 			Gtk.HButtonBox bbox = new Gtk.HButtonBox ();
@@ -603,6 +601,7 @@ namespace Tomboy
 		public Gtk.Widget MakeAddinsPane ()
 		{
 			Gtk.VBox vbox = new Gtk.VBox (false, 6);
+			/*
 			vbox.BorderWidth = 6;
 			Gtk.Label l = new Gtk.Label (Catalog.GetString (
 			                                     "The following add-ins are installed"));
@@ -681,7 +680,7 @@ namespace Tomboy
 
 			tree.Selection.Changed += OnAddinTreeSelectionChanged;
 			LoadAddins ();
-
+			*/
 			return vbox;
 		}
 
@@ -695,6 +694,7 @@ namespace Tomboy
 		/// </summary>
 		void UpdateAddinButtons ()
 		{
+			/*
 			Mono.Addins.Addin sinfo =
 			        addin_tree.ActiveAddinData as Mono.Addins.Addin;
 
@@ -709,10 +709,12 @@ namespace Tomboy
 				addin_prefs_button.Sensitive = addin_manager.IsAddinConfigurable (sinfo);
 				addin_info_button.Sensitive = true;
 			}
+			*/
 		}
 
 		void LoadAddins ()
 		{
+			/*
 			object s = addin_tree.SaveStatus ();
 
 			addin_tree.Clear ();
@@ -726,10 +728,12 @@ namespace Tomboy
 
 			addin_tree.RestoreStatus (s);
 			UpdateAddinButtons ();
+			*/
 		}
 
 		void OnEnableAddinButton (object sender, EventArgs args)
 		{
+			/*
 			Mono.Addins.Addin sinfo =
 			        addin_tree.ActiveAddinData as Mono.Addins.Addin;
 
@@ -737,10 +741,12 @@ namespace Tomboy
 				return;
 
 			EnableAddin (sinfo, true);
+			*/
 		}
 
 		void OnDisableAddinButton (object sender, EventArgs args)
 		{
+			/*
 			Mono.Addins.Addin sinfo =
 			        addin_tree.ActiveAddinData as Mono.Addins.Addin;
 
@@ -748,16 +754,20 @@ namespace Tomboy
 				return;
 
 			EnableAddin (sinfo, false);
+			*/
 		}
 
 		void EnableAddin (Mono.Addins.Addin addin, bool enable)
 		{
+			/*
 			addin.Enabled = enable;
 			LoadAddins ();
+			*/
 		}
 
 		void OnAddinPrefsButton (object sender, EventArgs args)
 		{
+			/*
 			Gtk.Dialog dialog = null;
 			Mono.Addins.Addin addin =
 			        addin_tree.ActiveAddinData as Mono.Addins.Addin;
@@ -816,6 +826,7 @@ namespace Tomboy
 			}
 
 			dialog.Present ();
+			*/
 		}
 
 		[GLib.ConnectBeforeAttribute]
@@ -839,6 +850,7 @@ namespace Tomboy
 
 		void OnAddinInfoButton (object sender, EventArgs args)
 		{
+			/*
 			Mono.Addins.Addin addin =
 			        addin_tree.ActiveAddinData as Mono.Addins.Addin;
 
@@ -864,6 +876,7 @@ namespace Tomboy
 			}
 
 			dialog.Present ();
+			*/
 		}
 
 		[GLib.ConnectBeforeAttribute]
@@ -980,7 +993,7 @@ namespace Tomboy
 			Gtk.Dialog advancedDlg =
 			        new Gtk.Dialog (Catalog.GetString ("Other Synchronization Options"),
 			                        this,
-			                        Gtk.DialogFlags.DestroyWithParent | Gtk.DialogFlags.Modal | Gtk.DialogFlags.NoSeparator,
+			                        Gtk.DialogFlags.DestroyWithParent | Gtk.DialogFlags.Modal,
 			                        Gtk.Stock.Close, Gtk.ResponseType.Close);
 			// Populate dialog
 			Gtk.Label label =
@@ -1017,12 +1030,12 @@ namespace Tomboy
 			Gtk.VBox vbox = new Gtk.VBox ();
 			vbox.BorderWidth = 18;
 
-			vbox.PackStart (promptOnConflictRadio);
-			vbox.PackStart (renameOnConflictRadio);
-			vbox.PackStart (overwriteOnConflictRadio);
+			vbox.PackStart (promptOnConflictRadio, true, true, 0);
+			vbox.PackStart (renameOnConflictRadio, true, true, 0);
+			vbox.PackStart (overwriteOnConflictRadio, true, true, 0);
 
-			advancedDlg.VBox.PackStart (label, false, false, 6);
-			advancedDlg.VBox.PackStart (vbox, false, false, 0);
+			advancedDlg.ContentArea.PackStart (label, false, false, 6);
+			advancedDlg.ContentArea.PackStart (vbox, false, false, 0);
 
 			advancedDlg.ShowAll ();
 
@@ -1314,7 +1327,7 @@ namespace Tomboy
 		        Gtk.Window parent)
 : base (info.Name,
 		        parent,
-		        Gtk.DialogFlags.DestroyWithParent | Gtk.DialogFlags.NoSeparator,
+		        Gtk.DialogFlags.DestroyWithParent,
 		        Gtk.Stock.Close, Gtk.ResponseType.Close)
 		{
 			this.info = info;
@@ -1343,7 +1356,7 @@ namespace Tomboy
 
 			hbox.ShowAll ();
 
-			VBox.PackStart (hbox, true, true, 0);
+			ContentArea.PackStart (hbox, true, true, 0);
 
 			Fill ();
 		}

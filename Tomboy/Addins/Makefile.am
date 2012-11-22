@@ -6,7 +6,6 @@ SUBDIRS =				\
 	ExportToHtml			\
 	FileSystemSyncService	\
 	FixedWidth			\
-	GalagoPresence		\
 	InsertTimestamp		\
 	NoteOfTheDay		\
 	PrintNotes			\
